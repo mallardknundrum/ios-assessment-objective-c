@@ -12,13 +12,13 @@ class SearchTableViewController: UITableViewController, UISearchBarDelegate {
 
     @IBOutlet var searchBar: UITableView!
     
-    var movieSearchResultsArray: [JSHMovie] = []
-    let movieController = JSHMovieController()
+    var movieSearchResultsArray: [JSHMovie]? {
+        didSet {
+            tableView.reloadData()
+        }
+    }
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-
-}
+    let movieController = JSHMovieController()
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         movieController.fetchMovies(withSearchTerm: searchBar.text) { (movieArray, error) in
@@ -27,11 +27,7 @@ class SearchTableViewController: UITableViewController, UISearchBarDelegate {
                 return
             } else {
                 guard let unwrappedMovieArray = movieArray as? [JSHMovie] else { return }
-                
                 self.movieSearchResultsArray = unwrappedMovieArray
-                DispatchQueue.main.async {
-                    self.tableView.reloadData()
-                }
             }
         }
     }
@@ -43,14 +39,15 @@ class SearchTableViewController: UITableViewController, UISearchBarDelegate {
     // MARK: - Table view data source
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        guard let movieSearchResultsArray = movieSearchResultsArray else { return 0 }
         return movieSearchResultsArray.count
     }
 
-    
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "movieCell", for: indexPath) as? MovieTableViewCell else { return UITableViewCell() }
-        let movie = movieSearchResultsArray[indexPath.row]
-        cell.movie = movie
+        if let movie = movieSearchResultsArray?[indexPath.row] {
+            cell.movie = movie
+        }
         return cell
     }
 }

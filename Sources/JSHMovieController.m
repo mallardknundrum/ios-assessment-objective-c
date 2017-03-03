@@ -24,7 +24,6 @@
     if (self) {
         _baseURL = @"https://api.themoviedb.org/3/search/movie";
         _apiKey = @"e1d1200cb6c2133d1a0a490d72bbd5e4";
-//        _moviesArray = [[NSMutableArray alloc] init];
     }
     return self;
 }
@@ -45,10 +44,6 @@
     NSURL *url = urlComponents.URL;
     NSLog(@"url: %@", url.description);
     
-    
-    // Get access to JSHMovie for initialization
-    JSHMovie *movieInstance = [[JSHMovie alloc] init];
-    
     // Storage to pass to the completion
     NSMutableArray *fetchMovieArray = [[NSMutableArray alloc] init];
     
@@ -64,29 +59,26 @@
             NSLog(@"Error: no data returned from the task. Error: %@", error);
             completion(nil, error);
         }
-        NSArray *jsonDict = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&error];
+        NSDictionary *jsonDict = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&error];
         if (!jsonDict || ![jsonDict isKindOfClass:[NSDictionary class]]) {
             NSLog(@"Error, could not parse JSON correctly - Error: %@", error);
             completion(nil, error);
         }
         NSArray *resultsArray = [jsonDict valueForKey:@"results"];
+        
         for (NSDictionary *resultDictionary in resultsArray) {
             dispatch_group_enter(group);
-            JSHMovie *movieInitialized = [movieInstance initWithDictionary:resultDictionary];
-            if (movieInitialized.imageEndpoint == nil) {
+            JSHMovie *movieInitialized = [[JSHMovie alloc] initWithDictionary:resultDictionary];
+            if ([movieInitialized.imageEndpoint isKindOfClass: [NSNull class]]) {
                 movieInitialized.imageEndpoint = @"/c414cDeQ9b6qLPLeKmiJuLDUREJ.jpg";
             }
             NSString *baseURL = [NSString stringWithFormat:@"http://image.tmdb.org/t/p/w500"];
-            NSString *imageURLString = [NSString stringWithFormat:@"%@%@", baseURL, movieInstance.imageEndpoint];
+            NSString *imageURLString = [NSString stringWithFormat:@"%@%@", baseURL, movieInitialized.imageEndpoint];
             NSLog(@"Movie Image URL: %@", imageURLString);
             NSURLComponents *urlComponents = [NSURLComponents componentsWithString:imageURLString];
             NSURL *url = urlComponents.URL;
             [[[NSURLSession sharedSession] dataTaskWithURL:url completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
-                if (error) {
-                    NSLog(@"Error - There was an error completing the data task to retrieve the image. Error: %@", error);
-                    dispatch_group_leave(group);
-                }
-                if (!data) {
+                if (error || !data) {
                     NSLog(@"No data was returned from the photo data task. Error: %@", error);
                     dispatch_group_leave(group);
                 } else {

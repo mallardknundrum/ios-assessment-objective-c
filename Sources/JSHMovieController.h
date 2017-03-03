@@ -10,12 +10,8 @@
 #import "JSHMovie.h"
 @interface JSHMovieController : NSObject
 
-
 @property (nonatomic) NSArray *moviesArray;
 
 - (void)fetchMoviesWithSearchTerm:(NSString *)searchTerm completion:(void (^)(NSArray *moviesCompletionArray, NSError *error))completion;
-
-//@property (nonatomic, copy) NSMutableArray *movies;
-
 
 @end

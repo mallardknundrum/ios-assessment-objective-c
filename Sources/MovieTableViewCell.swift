@@ -13,11 +13,11 @@ class MovieTableViewCell: UITableViewCell {
     @IBOutlet weak var moviePlotTextView: UITextView!
     @IBOutlet weak var movieTitleLabel: UILabel!
     @IBOutlet weak var movieRatingLabel: UILabel!
-    
+        
     // MARK: - Properties
     var movie: JSHMovie? {
         didSet {
-            updateViews()
+            self.updateViews()
         }
     }
     
@@ -27,13 +27,15 @@ class MovieTableViewCell: UITableViewCell {
             movieImageView.image = image
             moviePlotTextView.text = movie.plot
             movieTitleLabel.text = movie.title
-            movieRatingLabel.text = "\(movie.rating) stars"
+            if let movieRating = movie.rating {
+                movieRatingLabel.text = "\(movieRating) stars"
+            }
         } else {
             moviePlotTextView.text = movie.plot
             movieTitleLabel.text = movie.title
-            movieRatingLabel.text = "\(movie.rating) stars"
+            if let movieRating = movie.rating {
+                movieRatingLabel.text = "\(movieRating) stars"
+            }
         }
-        
     }
-
 }

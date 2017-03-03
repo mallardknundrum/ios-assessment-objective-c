@@ -21,7 +21,7 @@
     }
     return self;
 }
--(instancetype)initWithDictionary:(NSDictionary<NSString *, id> *)jsonDictionary
+-(instancetype)initWithDictionary:(NSDictionary *)jsonDictionary
 {
     NSString *title = jsonDictionary[@"title"];
     NSString *rating =[NSString stringWithFormat:@"%@", [jsonDictionary[@"vote_average"] stringValue]];

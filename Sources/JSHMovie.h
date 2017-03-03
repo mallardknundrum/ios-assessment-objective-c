@@ -11,7 +11,7 @@
 
 @interface JSHMovie : NSObject
 
--(instancetype)initWithTitle:(NSString *)title rating:(NSString *)rating plot:(NSString *)plot imageEndpoint:(NSString *)imageEndpoint;
+-(instancetype)initWithTitle:(NSString *)title rating:(NSString *)rating plot:(NSString *)plot imageEndpoint:(NSString *)imageEndpoint NS_DESIGNATED_INITIALIZER;
 -(instancetype)initWithDictionary:(NSDictionary<NSString *, id> *)jsonDictionary;
 
 @property (nonatomic, copy) NSString *title;
