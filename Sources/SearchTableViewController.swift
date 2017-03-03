@@ -29,6 +29,8 @@ class SearchTableViewController: UITableViewController, UISearchBarDelegate {
                 guard let unwrappedMovieArray = movieArray as? [JSHMovie] else { return }
                 self.movieSearchResultsArray = unwrappedMovieArray
             }
+            searchBar.text = ""
+            searchBar.resignFirstResponder()
         }
     }
 
