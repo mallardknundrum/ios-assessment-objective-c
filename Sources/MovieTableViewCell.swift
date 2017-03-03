@@ -28,13 +28,13 @@ class MovieTableViewCell: UITableViewCell {
             moviePlotTextView.text = movie.plot
             movieTitleLabel.text = movie.title
             if let movieRating = movie.rating {
-                movieRatingLabel.text = "\(movieRating) stars"
+                movieRatingLabel.text = "\(movieRating)/10"
             }
         } else {
             moviePlotTextView.text = movie.plot
             movieTitleLabel.text = movie.title
             if let movieRating = movie.rating {
-                movieRatingLabel.text = "\(movieRating) stars"
+                movieRatingLabel.text = "\(movieRating)/10"
             }
         }
     }
